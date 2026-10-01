@@ -8,6 +8,7 @@ import {
   Input,
   Label,
   TextField,
+  toast,
 } from "@heroui/react";
 import { signIn, signUp } from "@/lib/auth.client";
 const SignUpPage = () => {
@@ -22,6 +23,7 @@ const SignUpPage = () => {
       password: data.password,
     });
     console.log("after sign up", resData, error);
+    toast.success("Check your gmail inbox.Please verify your email address");
   };
   const handleSingInWithGoogle = async () => {
     const resData = await signIn.social({

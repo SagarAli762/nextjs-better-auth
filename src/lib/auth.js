@@ -9,22 +9,32 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
-    // requireEmailVerification: true,
+    requireEmailVerification: true,
+    sendResetPassword: async ({ user, url, token }, request) => {
+      void resend.emails.send({
+        from: "Acme <onboarding@resend.dev>",
+        to: "mdsagar.webdev@gmail.com",
+        subject: "Please reset your password",
+        html: `<h1>Reset your password</h1>
+        Click the link to reset your password: <a href="${url}">here</a> `,
+      });
+    },
   },
-  // sendOnSignUp: true,
-  // autoSignInAfterVerification: true,
-  // expiresIn: 7 * 24 * 3600, // 1 hour
-  // emailVerification: {
-  //   sendVerificationEmail: async ({ user, url }) => {
-  //     void resend.emails.send({
-  //       from: "Acme <onboarding@resend.dev>",
-  //       to: "mdsagar.webdev@gmail.com",
-  //       subject: "Verify your email address",
-  //       html: `<h1>Please verify your email address</h1>
-  //       Click <a href="${url}">here</a> to verify your email.`,
-  //     });
-  //   },
-  //},
+
+  emailVerification: {
+    sendVerificationEmail: async ({ user, url }) => {
+      void resend.emails.send({
+        from: "Acme <onboarding@resend.dev>",
+        to: "mdsagar.webdev@gmail.com",
+        subject: "Verify your email address",
+        html: `<h1>Please verify your email address</h1>
+        Click <a href="${url}">here</a> to verify your email.`,
+      });
+    },
+  },
+  sendOnSignUp: true,
+  autoSignInAfterVerification: true,
+  expiresIn: 7 * 24 * 3600, // 1 hour
   socialProviders: {
     google: {
       clientId: process.env.BETTER_AUTH_GOOGLE_CLIENT_ID,
